@@ -1,0 +1,55 @@
+id: stream_demux_stream_demux
+label: Stream Demux
+category: '[stream_demux]'
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: lengths
+    label: Lengths
+    dtype: int_vector
+    default: 1, 1
+-   id: num_outputs
+    label: Num Outputs
+    dtype: int
+    default: '2'
+    hide: part
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_outputs }
+
+asserts:
+- ${ num_outputs > 0 }
+- ${ num_outputs == len(lengths) }
+- ${ vlen > 0 }
+
+templates:
+    imports: from stream_demux import stream_demux_swig
+    make: stream_demux_swig.stream_demux(${type.size}*${vlen}, ${lengths})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stream_demux.h>']
+    declarations: 'stream_demux::stream_demux::sptr ${id};'
+    make: 'this->${id} = stream_demux::stream_demux::make(${type.size}*${vlen}, ${lengths});'
+
+file_format: 1
