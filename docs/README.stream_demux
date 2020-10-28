@@ -1,3 +1,7 @@
+NOTE: This block has been merged into GNU Radio main branch and is available
+from GNU Radio 3.9+. Please check GNU Radio for the latest version. This repo
+host a 3.8 version of the block and is here just for historical reasons.
+
 This is the stream_demux-write-a-block package meant as a guide to building
 out-of-tree packages. To use the stream_demux blocks, the Python namespaces
 is in 'stream_demux', which is imported as:
